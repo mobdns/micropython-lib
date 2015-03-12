@@ -37,7 +37,7 @@ class Connection:
 
     def __init__(self, fd):
         self.fd = fd
-        self.f = open(fd)
+        self.f = open(fd, 'b')
 
     def __repr__(self):
         return "<Connection %s>" % self.f
@@ -45,13 +45,13 @@ class Connection:
     def send(self, obj):
         s = pickle.dumps(obj)
         self.f.write(len(s).to_bytes(4))
-        self.f.write(s)
+        self.f.write(s.encode())
 
     def recv(self):
         s = self.f.read(4)
         l = int.from_bytes(s)
         s = self.f.read(l)
-        return pickle.loads(s)
+        return pickle.loads(s.decode())
 
     def close(self):
         self.f.close()
